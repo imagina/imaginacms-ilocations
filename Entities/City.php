@@ -36,31 +36,31 @@ class City extends Model
           return $this->belongsTo(Province::class);
       }
 
-      public function geozones()
-      {
-          return $this->morphToMany(Geozones::class, 'geozonable');
-      }
-
-    public function getNameAttribute()
+    public function geozones()
     {
-        $currentTranslations = $this->getTranslation(locale());
-
-        if (empty($currentTranslations) || empty($currentTranslations->toArray()['name'])) {
-            $model = $this->getTranslation(\LaravelLocalization::getDefaultLocale());
-
-            if (empty($model)) {
-                return '';
-            }
-
-            return $model->toArray()['name'] ?? '';
-        }
-
+        return $this->morphToMany(Geozones::class, 'geozonable');
     }
 
-      public function __call($method, $parameters)
-      {
-          //i: Convert array to dot notation
-          $config = implode('.', ['asgard.ilocations.config.relations.city', $method]);
+  public function getNameAttribute(){
+
+    $currentTranslations = $this->getTranslation(locale());
+
+    if (empty($currentTranslations) || empty($currentTranslations->toArray()["name"])) {
+
+      $model = $this->getTranslation(\LaravelLocalization::getDefaultLocale());
+
+      if(empty($model)) return "";
+      return $model->toArray()["name"] ?? "";
+    }
+
+    return $currentTranslations->toArray()["name"];
+
+  }
+
+    public function __call($method, $parameters)
+    {
+        #i: Convert array to dot notation
+        $config = implode('.', ['asgard.ilocations.config.relations.city', $method]);
 
           //i: Relation method resolver
           if (config()->has($config)) {

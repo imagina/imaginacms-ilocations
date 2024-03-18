@@ -124,16 +124,17 @@ class EloquentProvinceRepository extends EloquentBaseRepository implements Provi
                 }
             }
 
-            //New filter by search
-            if (isset($filter->search)) {
-                $query->where(function ($query) use ($filter) {
-                    $query->whereRaw("ilocations__provinces.id IN (SELECT ipt.province_id FROM ilocations__province_translations AS ipt WHERE ipt.locale = '$filter->locale' AND ipt.name LIKE '%$filter->search%')")
-                      ->orWhere('ilocations__provinces.id', 'like', '%'.$filter->search.'%')
-                      ->orWhere('updated_at', 'like', '%'.$filter->search.'%')
-                      ->orWhere('created_at', 'like', '%'.$filter->search.'%');
-                });
-            }
-        }
+      //New filter by search
+      if (isset($filter->search)) {
+        $query->where(function ($query) use ($filter) {
+          $locale = $filter->locale ?? \App::getLocale();
+          $query->whereRaw("ilocations__provinces.id IN (SELECT ipt.province_id FROM ilocations__province_translations AS ipt WHERE ipt.locale = '$locale' AND ipt.name LIKE '%$filter->search%')")
+            ->orWhere('ilocations__provinces.id', 'like', '%' . $filter->search . '%')
+            ->orWhere('updated_at', 'like', '%' . $filter->search . '%')
+            ->orWhere('created_at', 'like', '%' . $filter->search . '%');
+        });
+      }
+    }
 
         $availableCountries = json_decode(setting('ilocations::availableCountries', null, '[]'));
         /*=== SETTINGS ===*/
