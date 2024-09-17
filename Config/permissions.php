@@ -7,6 +7,7 @@ return [
         'create' => 'ilocations::countries.create resource',
         'edit' => 'ilocations::countries.edit resource',
         'destroy' => 'ilocations::countries.destroy resource',
+        'restore' => 'ilocations::countries.restore resource',
     ],
     'ilocations.provinces' => [
         'manage' => 'ilocations::provinces.manage resource',
@@ -14,6 +15,7 @@ return [
         'create' => 'ilocations::provinces.create resource',
         'edit' => 'ilocations::provinces.edit resource',
         'destroy' => 'ilocations::provinces.destroy resource',
+        'restore' => 'ilocations::provinces.restore resource',
     ],
     'ilocations.geozones' => [
         'manage' => 'ilocations::geozones.manage resource',
@@ -21,6 +23,7 @@ return [
         'create' => 'ilocations::geozones.create resource',
         'edit' => 'ilocations::geozones.edit resource',
         'destroy' => 'ilocations::geozones.destroy resource',
+        'restore' => 'ilocations::geozones.restore resource',
     ],
     'ilocations.geozones_countries' => [
         'manage' => 'ilocations::geozones_countries.manage resource',
@@ -28,6 +31,7 @@ return [
         'create' => 'ilocations::geozones_countries.create resource',
         'edit' => 'ilocations::geozones_countries.edit resource',
         'destroy' => 'ilocations::geozones_countries.destroy resource',
+        'restore' => 'ilocations::geozones_countries.restore resource',
     ],
     'ilocations.geozonescountries' => [
         'manage' => 'ilocations::geozonescountries.manage resource',
@@ -35,6 +39,7 @@ return [
         'create' => 'ilocations::geozonescountries.create resource',
         'edit' => 'ilocations::geozonescountries.edit resource',
         'destroy' => 'ilocations::geozonescountries.destroy resource',
+        'restore' => 'ilocations::geozonescountries.restore resource',
     ],
     'ilocations.cities' => [
         'manage' => 'ilocations::cities.manage resource',
@@ -42,6 +47,7 @@ return [
         'create' => 'ilocations::cities.create resource',
         'edit' => 'ilocations::cities.edit resource',
         'destroy' => 'ilocations::cities.destroy resource',
+        'restore' => 'ilocations::cities.restore resource',
     ],
     'ilocations.polygons' => [
         'manage' => 'ilocations::polygons.manage resource',
@@ -49,6 +55,7 @@ return [
         'create' => 'ilocations::polygons.create resource',
         'edit' => 'ilocations::polygons.edit resource',
         'destroy' => 'ilocations::polygons.destroy resource',
+        'restore' => 'ilocations::polygons.restore resource',
     ],
     'ilocations.neighborhoods' => [
       'manage' => 'ilocations::neighborhoods.manage resource',
@@ -56,6 +63,7 @@ return [
       'create' => 'ilocations::neighborhoods.create resource',
       'edit' => 'ilocations::neighborhoods.edit resource',
       'destroy' => 'ilocations::neighborhoods.destroy resource',
+      'restore' => 'ilocations::neighborhoods.restore resource',
     ],
     'ilocations.localities' => [
         'manage' => 'ilocations::localities.manage resource',

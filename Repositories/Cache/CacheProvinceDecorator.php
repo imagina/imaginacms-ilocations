@@ -3,9 +3,9 @@
 namespace Modules\Ilocations\Repositories\Cache;
 
 use Modules\Ilocations\Repositories\ProvinceRepository;
-use Modules\Core\Repositories\Cache\BaseCacheDecorator;
+use Modules\Core\Icrud\Repositories\Cache\BaseCacheCrudDecorator;
 
-class CacheProvinceDecorator extends BaseCacheDecorator implements ProvinceRepository
+class CacheProvinceDecorator extends BaseCacheCrudDecorator implements ProvinceRepository
 {
     public function __construct(ProvinceRepository $province)
     {
@@ -20,25 +20,4 @@ class CacheProvinceDecorator extends BaseCacheDecorator implements ProvinceRepos
             return $this->repository->findByIso2($iso2);
         });
     }
-
-  public function index($page, $take, $filter, $include, $fields)
-  {
-    return $this->remember(function () use ($page, $take, $filter, $include, $fields) {
-      return $this->repository->index($page, $take, $filter, $include, $fields);
-    });
-  }
-
-  public function getItemsBy($params)
-  {
-    return $this->remember(function () use ($params) {
-      return $this->repository->getItemsBy($params);
-    });
-  }
-
-  public function getItem($criteria, $params = false)
-  {
-    return $this->remember(function () use ($criteria, $params) {
-      return $this->repository->getItem($criteria, $params);
-    });
-  }
 }

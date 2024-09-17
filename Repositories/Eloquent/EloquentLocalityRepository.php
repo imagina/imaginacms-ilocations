@@ -20,10 +20,20 @@ class EloquentLocalityRepository extends EloquentCrudRepository implements Local
   protected $replaceSyncModelRelations = [];
 
   /**
+   * Attribute to define default relations
+   * all apply to index and show
+   * index apply in the getItemsBy
+   * show apply in the getItem
+   * @var array
+   */
+  protected $with = [/*all => [] ,index => [],show => []*/];
+
+  /**
    * Filter query
    *
    * @param $query
    * @param $filter
+   * @param $params
    * @return mixed
    */
   public function filterQuery($query, $filter, $params)

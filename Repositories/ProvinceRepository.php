@@ -2,12 +2,9 @@
 
 namespace Modules\Ilocations\Repositories;
 
-use Modules\Core\Repositories\BaseRepository;
+use Modules\Core\Icrud\Repositories\BaseCrudRepository;
 
-interface ProvinceRepository extends BaseRepository
+interface ProvinceRepository extends BaseCrudRepository
 {
-  public function findByIso2($iso2);
-  public function index($page, $take, $filter, $include, $fields);
-  public function getItemsBy($params);
-  public function getItem($criteria, $params = false);
+    public function findByIso2($iso2);
 }

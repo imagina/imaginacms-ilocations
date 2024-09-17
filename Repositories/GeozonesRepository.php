@@ -2,11 +2,9 @@
 
 namespace Modules\Ilocations\Repositories;
 
-use Modules\Core\Repositories\BaseRepository;
+use Modules\Core\Icrud\Repositories\BaseCrudRepository;
 
-interface GeozonesRepository extends BaseRepository
+interface GeozonesRepository extends BaseCrudRepository
 {
-  public function getAll();
-  public function getItemsBy($params);
-  public function getItem($criteria, $params = false);
+    public function getAll();
 }

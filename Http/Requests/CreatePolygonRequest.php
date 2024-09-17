@@ -8,9 +8,7 @@ class CreatePolygonRequest extends BaseFormRequest
 {
     public function rules()
     {
-        return [
-
-        ];
+        return [];
     }
 
     public function translationRules()
@@ -32,4 +30,9 @@ class CreatePolygonRequest extends BaseFormRequest
     {
         return [];
     }
+
+    public function getValidator(){
+        return $this->getValidatorInstance();
+    }
+    
 }

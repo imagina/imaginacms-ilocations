@@ -2,10 +2,8 @@
 
 namespace Modules\Ilocations\Repositories;
 
-use Modules\Core\Repositories\BaseRepository;
+use Modules\Core\Icrud\Repositories\BaseCrudRepository;
 
-interface PolygonRepository extends BaseRepository
+interface PolygonRepository extends BaseCrudRepository
 {
-  public function getItemsBy($params);
-  public function getItem($criteria, $params = false);
 }

@@ -2,12 +2,11 @@
 
 namespace Modules\Ilocations\Repositories;
 
-use Modules\Core\Repositories\BaseRepository;
+use Modules\Core\Icrud\Repositories\BaseCrudRepository;
 
-interface CityRepository extends BaseRepository
+interface CityRepository extends BaseCrudRepository
 {
-  public function whereByCountry($id);
-  public function index($page, $take, $filter, $include, $fields);
-  public function getItemsBy($params);
-  public function getItem($criteria, $params = false);
+
+    public function whereByCountry($id);
+    
 }

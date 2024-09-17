@@ -2,19 +2,116 @@
 
 use Illuminate\Routing\Router;
 
+$router->group(['prefix' =>'/v2/ilocations'], function (Router $router) {
 
-$router->group(['prefix' => '/v2/ilocations'], function (Router $router) {
+    $router->apiCrud([
+      'module' => 'ilocations',
+      'prefix' => 'cities',
+      'controller' => 'CityApiController',
+      'middleware' => ['index' => [], 'show' => []]
+      // 'customRoutes' => [ // Include custom routes if needed
+      //  [
+      //    'method' => 'post', // get,post,put....
+      //    'path' => '/some-path', // Route Path
+      //    'uses' => 'ControllerMethodName', //Name of the controller method to use
+      //    'middleware' => [] // if not set up middleware, auth:api will be the default
+      //  ]
+      // ]
+    ]);
 
-  require('ApiRoutes/CityRoutes.php');
-  require('ApiRoutes/CountryRoutes.php');
-  require('ApiRoutes/ProvinceRoutes.php');
-  require('ApiRoutes/PolygonRoutes.php');
-  require('ApiRoutes/GeozoneRoutes.php');
-  require('ApiRoutes/NeighborhoodRoutes.php');
-  require('ApiRoutes/LocalityRoutes.php');
+    $router->apiCrud([
+      'module' => 'ilocations',
+      'prefix' => 'countries',
+      'controller' => 'CountryApiController',
+      'middleware' => ['index' => [], 'show' => []]
+      // 'customRoutes' => [ // Include custom routes if needed
+      //  [
+      //    'method' => 'post', // get,post,put....
+      //    'path' => '/some-path', // Route Path
+      //    'uses' => 'ControllerMethodName', //Name of the controller method to use
+      //    'middleware' => [] // if not set up middleware, auth:api will be the default
+      //  ]
+      // ]
+    ]);
+
+    $router->apiCrud([
+      'module' => 'ilocations',
+      'prefix' => 'geozones',
+      'controller' => 'GeozonesApiController',
+      'middleware' => ['index' => [], 'show' => []]
+      // 'customRoutes' => [ // Include custom routes if needed
+      //  [
+      //    'method' => 'post', // get,post,put....
+      //    'path' => '/some-path', // Route Path
+      //    'uses' => 'ControllerMethodName', //Name of the controller method to use
+      //    'middleware' => [] // if not set up middleware, auth:api will be the default
+      //  ]
+      // ]
+    ]);
+
+    $router->apiCrud([
+      'module' => 'ilocations',
+      'prefix' => 'localities',
+      'controller' => 'LocalityApiController',
+      'middleware' => ['index' => [], 'show' => []]
+      // 'customRoutes' => [ // Include custom routes if needed
+      //  [
+      //    'method' => 'post', // get,post,put....
+      //    'path' => '/some-path', // Route Path
+      //    'uses' => 'ControllerMethodName', //Name of the controller method to use
+      //    'middleware' => [] // if not set up middleware, auth:api will be the default
+      //  ]
+      // ]
+    ]);
+
+    $router->apiCrud([
+      'module' => 'ilocations',
+      'prefix' => 'neighborhoods',
+      'controller' => 'NeighborhoodApiController',
+      'middleware' => ['index' => [], 'show' => []]
+      // 'customRoutes' => [ // Include custom routes if needed
+      //  [
+      //    'method' => 'post', // get,post,put....
+      //    'path' => '/some-path', // Route Path
+      //    'uses' => 'ControllerMethodName', //Name of the controller method to use
+      //    'middleware' => [] // if not set up middleware, auth:api will be the default
+      //  ]
+      // ]
+    ]);
+
+    $router->apiCrud([
+      'module' => 'ilocations',
+      'prefix' => 'polygons',
+      'controller' => 'PolygonApiController',
+      'middleware' => ['index' => [], 'show' => []]
+      // 'customRoutes' => [ // Include custom routes if needed
+      //  [
+      //    'method' => 'post', // get,post,put....
+      //    'path' => '/some-path', // Route Path
+      //    'uses' => 'ControllerMethodName', //Name of the controller method to use
+      //    'middleware' => [] // if not set up middleware, auth:api will be the default
+      //  ]
+      // ]
+    ]);
+
+    $router->apiCrud([
+      'module' => 'ilocations',
+      'prefix' => 'provinces',
+      'controller' => 'ProvinceApiController',
+      'middleware' => ['index' => [], 'show' => []]
+      // 'customRoutes' => [ // Include custom routes if needed
+      //  [
+      //    'method' => 'post', // get,post,put....
+      //    'path' => '/some-path', // Route Path
+      //    'uses' => 'ControllerMethodName', //Name of the controller method to use
+      //    'middleware' => [] // if not set up middleware, auth:api will be the default
+      //  ]
+      // ]
+    ]);
+// append
+
 
 });
-
 
 $router->group(['prefix' => '/ilocations'], function (Router $router) {
 
@@ -43,3 +140,4 @@ $router->group(['prefix' => '/ilocations'], function (Router $router) {
   ]);
 
 });
+

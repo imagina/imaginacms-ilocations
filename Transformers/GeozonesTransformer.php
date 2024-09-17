@@ -4,7 +4,7 @@ namespace Modules\Ilocations\Transformers;
 
 use Modules\Core\Icrud\Transformers\CrudResource;
 
-class CityTransformer extends CrudResource
+class GeozonesTransformer extends CrudResource
 {
   /**
   * Method to merge values with response
@@ -13,6 +13,8 @@ class CityTransformer extends CrudResource
   */
   public function modelAttributes($request)
   {
-    return [];
+    return [
+      'zonesToGeozone' => ZoneTransformer::collection($this->whenLoaded('zonesToGeozone'))
+    ];
   }
 }

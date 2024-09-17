@@ -13,8 +13,18 @@ class Locality extends CrudModel
   public $transformer = 'Modules\Ilocations\Transformers\LocalityTransformer';
   public $repository = 'Modules\Ilocations\Repositories\LocalityRepository';
   public $requestValidation = [
-    'create' => 'Modules\Ilocations\Http\Requests\CreateLocalityRequest',
-    'update' => 'Modules\Ilocations\Http\Requests\UpdateLocalityRequest',
+      'create' => 'Modules\Ilocations\Http\Requests\CreateLocalityRequest',
+      'update' => 'Modules\Ilocations\Http\Requests\UpdateLocalityRequest',
+    ];
+  //Instance external/internal events to dispatch with extraData
+  public $dispatchesEventsWithBindings = [
+    //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
+    'created' => [],
+    'creating' => [],
+    'updated' => [],
+    'updating' => [],
+    'deleting' => [],
+    'deleted' => []
   ];
   public $translatedAttributes = [
     'name'

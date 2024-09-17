@@ -3,13 +3,29 @@
 namespace Modules\Ilocations\Entities;
 
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\Model;
+use Modules\Core\Icrud\Entities\CrudModel;
 
-class Country extends Model
+class Country extends CrudModel
 {
   use Translatable;
 
   protected $table = 'ilocations__countries';
+  public $transformer = 'Modules\Ilocations\Transformers\CountryTransformer';
+  public $repository = 'Modules\Ilocations\Repositories\CountryRepository';
+  public $requestValidation = [
+      'create' => 'Modules\Ilocations\Http\Requests\CreateCountryRequest',
+      'update' => 'Modules\Ilocations\Http\Requests\UpdateCountryRequest',
+    ];
+  //Instance external/internal events to dispatch with extraData
+  public $dispatchesEventsWithBindings = [
+    //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
+    'created' => [],
+    'creating' => [],
+    'updated' => [],
+    'updating' => [],
+    'deleting' => [],
+    'deleted' => []
+  ];
   public $translatedAttributes = [
     'name',
     'full_name'
@@ -96,8 +112,8 @@ class Country extends Model
 
   }
 
-    public function __call($method, $parameters)
-    {
+  public function __call($method, $parameters)
+  {
         #i: Convert array to dot notation
         $config = implode('.', ['asgard.ilocations.config.relations.country', $method]);
 
@@ -111,5 +127,6 @@ class Country extends Model
 
         #i: No relation found, return the call to parent (Eloquent) to handle it.
         return parent::__call($method, $parameters);
-    }
+  }
+
 }

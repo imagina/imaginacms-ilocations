@@ -36,4 +36,9 @@ class CreateCityRequest extends BaseFormRequest
     {
         return [];
     }
+
+    public function getValidator(){
+        return $this->getValidatorInstance();
+    }
+    
 }

@@ -2,178 +2,194 @@
 
 namespace Modules\Ilocations\Repositories\Eloquent;
 
-use Illuminate\Support\Arr;
-use Modules\Ilocations\Entities\Geozones;
-use Modules\Ilocations\Entities\GeozonesCountries;
 use Modules\Ilocations\Repositories\GeozonesRepository;
-use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
-use Illuminate\Database\Eloquent\Builder;
+use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
 
-class EloquentGeozonesRepository extends EloquentBaseRepository implements GeozonesRepository
+class EloquentGeozonesRepository extends EloquentCrudRepository implements GeozonesRepository
 {
+  /**
+   * Filter names to replace
+   * @var array
+   */
+  protected $replaceFilters = [];
+
+  /**
+   * Relation names to replace
+   * @var array
+   */
+  protected $replaceSyncModelRelations = [];
+
+  /**
+   * Attribute to define default relations
+   * all apply to index and show
+   * index apply in the getItemsBy
+   * show apply in the getItem
+   * @var array
+   */
+  protected $with = [/*all => [] ,index => [],show => []*/];
+
+  /**
+   * Filter query
+   *
+   * @param $query
+   * @param $filter
+   * @param $params
+   * @return mixed
+   */
+  public function filterQuery($query, $filter, $params)
+  {
+
+    /**
+     * Note: Add filter name to replaceFilters attribute before replace it
+     *
+     * Example filter Query
+     * if (isset($filter->status)) $query->where('status', $filter->status);
+     *
+     */
+
+    if (isset($filter->search) && !empty($filter->search)) {
+      $query->where('name', 'like', "%{$filter->search}%");
+    }
+
+    /* Filter for address */
+    if(isset($filter->address) && isset($filter->address->city) && isset($filter->address->province) && isset($filter->address->country)){
+
+      $query->whereHas('cities', function ($query) use ($filter) {
+        $query->where('ilocations__cities.id', $filter->address->city);
+      });
+
+      $query->orWhereHas('countries', function ($query) use ($filter) {
+        $query->where('ilocations__countries.id', $filter->address->country);
+      });
+
+      $query->orWhereHas('provinces', function ($query) use ($filter) {
+        $query->where('ilocations__provinces.id', $filter->address->province);
+      });
+
+    }
+
+    //Response
+    return $query;
+  }
+
+  /**
+   * Method to sync Model Relations
+   *
+   * @param $model ,$data
+   * @return $model
+   */
+  public function syncModelRelations($model, $data)
+  {
+    //Get model relations data from attribute of model
+    $modelRelationsData = ($model->modelRelations ?? []);
+
+    /**
+     * Note: Add relation name to replaceSyncModelRelations attribute before replace it
+     *
+     * Example to sync relations
+     * if (array_key_exists(<relationName>, $data)){
+     *    $model->setRelation(<relationName>, $model-><relationName>()->sync($data[<relationName>]));
+     * }
+     *
+     */
+
+    //Response
+    return $model;
+  }
+
   public function getAll(){
     return $this->model->orderBy('name','asc')->get();
   }
 
-  public function getItemsBy($params = false)
-  {
-    /*== initialize query ==*/
-    $query = $this->model->query();
-
-    /*== RELATIONSHIPS ==*/
-    if (in_array('*', $params->include)) {//If Request all relationships
-      $query->with(['province','country']);
-    } else {//Especific relationships
-      $includeDefault = [];//Default relationships
-      if (isset($params->include))//merge relations with default relationships
-        $includeDefault = array_merge($includeDefault, $params->include);
-      $query->with($includeDefault);//Add Relationships to query
-    }
-
-    /*== FILTERS ==*/
-    if (isset($params->filter)) {
-      $filter = $params->filter;//Short filter
-
-
-      if (isset($filter->country))
-        $query->where("country_id", $filter->country);
-
-      if (isset($filter->province))
-        $query->where("province_id", $filter->province);
-
-      /* Filter for address */
-      if(
-        isset($filter->address) &&
-        isset($filter->address->city) &&
-        isset($filter->address->province) &&
-        isset($filter->address->country)
-      ){
-
-        $query->whereHas('cities', function ($query) use ($filter) {
-          $query->where('ilocations__cities.id', $filter->address->city);
-        });
-
-        $query->orWhereHas('countries', function ($query) use ($filter) {
-          $query->where('ilocations__countries.id', $filter->address->country);
-        });
-
-        $query->orWhereHas('provinces', function ($query) use ($filter) {
-          $query->where('ilocations__provinces.id', $filter->address->province);
-        });
-
-      }
-
-      //Filter by date
-      if (isset($filter->date)) {
-        $date = $filter->date;//Short filter date
-        $date->field = $date->field ?? 'created_at';
-        if (isset($date->from))//From a date
-          $query->whereDate($date->field, '>=', $date->from);
-        if (isset($date->to))//to a date
-          $query->whereDate($date->field, '<=', $date->to);
-      }
-
-      //Order by
-      if (isset($filter->order)) {
-        $orderByField = $filter->order->field ?? 'created_at';//Default field
-        $orderWay = $filter->order->way ?? 'desc';//Default way
-        $query->orderBy($orderByField, $orderWay);//Add order to query
-      }
-
-      if (isset($filter->search) && !empty($filter->search)) {
-        $query->where('name', 'like', "%{$filter->search}%");
-      }
-    }
-
-    /*== FIELDS ==*/
-    if (isset($params->fields) && count($params->fields))
-      $query->select($params->fields);
-
-    /*== REQUEST ==*/
-    if (isset($params->page) && $params->page) {
-      return $query->paginate($params->take);
-    } else {
-      $params->take ? $query->take($params->take) : false;//Take
-      return $query->get();
-    }
-  }
-
-  public function getItem($criteria, $params = false)
-  {
-    //Initialize query
-    $query = $this->model->query();
-
-    /*== RELATIONSHIPS ==*/
-    if (in_array('*', $params->include)) {//If Request all relationships
-      $query->with(['province','country']);
-    } else {//Especific relationships
-      $includeDefault = [];//Default relationships
-      if (isset($params->include))//merge relations with default relationships
-        $includeDefault = array_merge($includeDefault, $params->include);
-      $query->with($includeDefault);//Add Relationships to query
-    }
-
-    /*== FILTER ==*/
-    if (isset($params->filter)) {
-      $filter = $params->filter;
-
-      if (isset($filter->field))//Filter by specific field
-        $field = $filter->field;
-    }
-
-    /*== FIELDS ==*/
-    if (isset($params->fields) && count($params->fields))
-      $query->select($params->fields);
-
-    /*== REQUEST ==*/
-    return $query->where($field ?? 'id', $criteria)->first();
-  }
-
+  /**
+   * Method to create model
+   *
+   * @param $data
+   * @return mixed
+   */
   public function create($data)
   {
-      /**
-       * @var Geozones $model
-       */
-        $model = $this->model->create($data);
+    //Event creating model
+    $this->dispatchesEvents(['eventName' => 'creating', 'data' => $data]);
 
-        if ($model) {
-            if(isset($data['zones_to_geozone'])){
-                $model->zonesToGeozone()->createMany($data['zones_to_geozone']);
-            }
-        }
-        return $model;
+    // Call function before create it, and take all change from $data
+    $this->beforeCreate($data);
+
+    //Create model
+    $model = $this->model->create($data);
+
+    if ($model) {
+      if(isset($data['zones_to_geozone'])){
+          $model->zonesToGeozone()->createMany($data['zones_to_geozone']);
+      }
+    }
+
+    // Default sync model relations
+    $model = $this->defaultSyncModelRelations($model, $data);
+
+    // Custom sync model relations
+    $model = $this->syncModelRelations($model, $data);
+
+    // Call function after create it, and take all change from $data and $model
+    $this->afterCreate($model, $data);
+
+    //Event created model
+    $this->dispatchesEvents(['eventName' => 'created', 'data' => $data, 'model' => $model]);
+
+    //Response
+    return $model;
   }
 
-  public function update($criteria, $data, $params = false)
+  /**
+   * Method to update model by criteria
+   *
+   * @param $criteria
+   * @param $data
+   * @param $params
+   * @return mixed
+   */
+  public function updateBy($criteria, $data, $params = false)
   {
-      /*== initialize query ==*/
-      $query = $this->model->query();
+    //Event updating model
+    $this->dispatchesEvents(['eventName' => 'updating', 'data' => $data, 'criteria' => $criteria]);
 
-      /*== FILTER ==*/
-      if (isset($params->filter)) {
-          $filter = $params->filter;
+    //Instance Query
+    $query = $this->model->query();
 
-          //Update by field
-          if (isset($filter->field))
-              $field = $filter->field;
-      }
+    //Check field name to criteria
+    if (isset($params->filter->field)) $field = $params->filter->field;
 
-      /*== REQUEST ==*/
-      /**
-       * @var Geozones $model
-       */
-      $model = $query->where($field ?? 'id', $criteria)->first();
-
+    //get model and update
+    $model = $query->where($field ?? 'id', $criteria)->first();
+    if (isset($model)) {
+      $this->beforeUpdate($data);
+      //Update Model
       $model->update((array)$data);
 
       if ($model) {
-          if(isset($data['zones_to_geozone'])) {
-              $model->zonesToGeozone()->delete();
-              $model->zonesToGeozone()->createMany($data['zones_to_geozone']);
-          }
-          return $model;
+        if(isset($data['zones_to_geozone'])) {
+            $model->zonesToGeozone()->delete();
+            $model->zonesToGeozone()->createMany($data['zones_to_geozone']);
+        }
       }
-      return false;
 
+      // Default Sync model relations
+      $model = $this->defaultSyncModelRelations($model, $data);
+      // Custom Sync model relations
+      $model = $this->syncModelRelations($model, $data);
+      // Call function after update it, and take all change from $data and $model
+      $this->afterUpdate($model, $data);
+      //Event updated model
+      $this->dispatchesEvents([
+        'eventName' => 'updated',
+        'data' => $data,
+        'criteria' => $criteria,
+        'model' => $model
+      ]);
+    }
+
+    //Response
+    return $model;
   }
+
 }
