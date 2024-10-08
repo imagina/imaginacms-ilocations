@@ -70,7 +70,7 @@ class City extends CrudModel
       return $model->toArray()["name"] ?? "";
     }
 
-    return $currentTranslations->toArray()["name"];
+    return ucwords(strtolower($currentTranslations->toArray()["name"]));
 
   }
 
