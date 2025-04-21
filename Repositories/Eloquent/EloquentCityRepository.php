@@ -59,7 +59,10 @@ class EloquentCityRepository extends EloquentCrudRepository implements CityRepos
       });
     }
 
-    $availableCountries = json_decode(setting("ilocations::availableCountries", null, "[]"));
+    $availableCountries = json_decode(setting(
+      "ilocations::availableCountries", null, "[]",
+      (config("tenancy.mode", null) == 'singleDatabase')
+    ));
     /*=== SETTINGS ===*/
     if (!empty($availableCountries) && !isset($params->filter->indexAll)) {
       if (!isset($params->permissions['ilocations.cities.manage']) || (!$params->permissions['ilocations.cities.manage'])) {
@@ -70,7 +73,10 @@ class EloquentCityRepository extends EloquentCrudRepository implements CityRepos
       }
     }
 
-    $availableProvinces = json_decode(setting("ilocations::availableProvinces", null, "[]"));
+    $availableProvinces = json_decode(setting(
+      "ilocations::availableProvinces", null, "[]",
+      (config("tenancy.mode", null) == 'singleDatabase')
+    ));
     /*=== SETTINGS ===*/
     if (!empty($availableProvinces) && !isset($params->filter->indexAll)) {
       if (!isset($params->permissions['ilocations.cities.manage']) || (!$params->permissions['ilocations.cities.manage'])) {
@@ -81,7 +87,10 @@ class EloquentCityRepository extends EloquentCrudRepository implements CityRepos
       }
     }
 
-    $availableCities = json_decode(setting("ilocations::availableCities", null, "[]"));
+    $availableCities = json_decode(setting(
+      "ilocations::availableCities", null, "[]",
+      (config("tenancy.mode", null) == 'singleDatabase')
+    ));
     /*=== SETTINGS ===*/
     if (!empty($availableCities) && !isset($params->filter->indexAll)) {
       if (!isset($params->permissions['ilocations.cities.manage']) || (!$params->permissions['ilocations.cities.manage'])) {
@@ -124,5 +133,5 @@ class EloquentCityRepository extends EloquentCrudRepository implements CityRepos
   {
     return $this->model->where('country_id', $id)->get();
   }
-  
+
 }

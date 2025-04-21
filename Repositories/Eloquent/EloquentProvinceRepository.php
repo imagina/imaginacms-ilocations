@@ -71,7 +71,10 @@ class EloquentProvinceRepository extends EloquentCrudRepository implements Provi
       });
     }
 
-    $availableCountries = json_decode(setting("ilocations::availableCountries", null, "[]"));
+    $availableCountries = json_decode(setting(
+      "ilocations::availableCountries", null, "[]",
+      (config("tenancy.mode", null) == 'singleDatabase')
+    ));
     /*=== SETTINGS ===*/
     if (!empty($availableCountries) && !isset($params->filter->indexAll)) {
       if (!isset($params->permissions['ilocations.provinces.manage']) || (!$params->permissions['ilocations.provinces.manage'])) {
@@ -82,7 +85,10 @@ class EloquentProvinceRepository extends EloquentCrudRepository implements Provi
       }
     }
 
-    $availableProvinces = json_decode(setting("ilocations::availableProvinces", null, "[]"));
+    $availableProvinces = json_decode(setting(
+      "ilocations::availableProvinces", null, "[]",
+      (config("tenancy.mode", null) == 'singleDatabase')
+    ));
     /*=== SETTINGS ===*/
     if (!empty($availableProvinces) && !isset($params->filter->indexAll)) {
       if (!isset($params->permissions['ilocations.provinces.manage']) || (!$params->permissions['ilocations.provinces.manage'])) {
@@ -125,5 +131,5 @@ class EloquentProvinceRepository extends EloquentCrudRepository implements Provi
   {
     return $this->model->where('iso_2', $iso2)->first();
   }
-  
+
 }
