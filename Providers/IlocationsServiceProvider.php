@@ -11,134 +11,146 @@ use Modules\Ilocations\Events\Handlers\RegisterIlocationsSidebar;
 
 class IlocationsServiceProvider extends ServiceProvider
 {
-    use CanPublishConfiguration;
+  use CanPublishConfiguration;
 
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
+  /**
+   * Indicates if loading of the provider is deferred.
+   *
+   * @var bool
+   */
+  protected $defer = false;
 
-    /**
-     * Register the service provider.
-     */
-    public function register(): void
-    {
-        $this->registerBindings();
-        $this->app['events']->listen(BuildingSidebar::class, RegisterIlocationsSidebar::class);
+  /**
+   * Register the service provider.
+   */
+  public function register(): void
+  {
+    $this->registerBindings();
+    $this->app['events']->listen(BuildingSidebar::class, RegisterIlocationsSidebar::class);
 
-        $this->app['events']->listen(LoadingBackendTranslations::class, function (LoadingBackendTranslations $event) {
-            // append translations
-        });
-    }
+    $this->app['events']->listen(LoadingBackendTranslations::class, function (LoadingBackendTranslations $event) {
+      // append translations
+    });
+  }
 
-    public function boot(): void
-    {
-        $this->publishConfig('ilocations', 'config');
-        $this->mergeConfigFrom($this->getModuleConfigFilePath('ilocations', 'permissions'), 'asgard.ilocations.permissions');
-        $this->mergeConfigFrom($this->getModuleConfigFilePath('ilocations', 'settings'), 'asgard.ilocations.settings');
-        $this->mergeConfigFrom($this->getModuleConfigFilePath('ilocations', 'settings-fields'), 'asgard.ilocations.settings-fields');
-        $this->mergeConfigFrom($this->getModuleConfigFilePath('ilocations', 'cmsPages'), 'asgard.ilocations.cmsPages');
-        $this->mergeConfigFrom($this->getModuleConfigFilePath('ilocations', 'cmsSidebar'), 'asgard.ilocations.cmsSidebar');
-        //$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-    }
+  public function boot(): void
+  {
+    $this->publishConfig('ilocations', 'config');
+    $this->mergeConfigFrom($this->getModuleConfigFilePath('ilocations', 'permissions'), 'asgard.ilocations.permissions');
+    $this->mergeConfigFrom($this->getModuleConfigFilePath('ilocations', 'settings'), 'asgard.ilocations.settings');
+    $this->mergeConfigFrom($this->getModuleConfigFilePath('ilocations', 'settings-fields'), 'asgard.ilocations.settings-fields');
+    $this->mergeConfigFrom($this->getModuleConfigFilePath('ilocations', 'cmsPages'), 'asgard.ilocations.cmsPages');
+    $this->mergeConfigFrom($this->getModuleConfigFilePath('ilocations', 'cmsSidebar'), 'asgard.ilocations.cmsSidebar');
+    //$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+  }
 
-    /**
-     * Get the services provided by the provider.
-     */
-    public function provides(): array
-    {
-        return [];
-    }
+  /**
+   * Get the services provided by the provider.
+   */
+  public function provides(): array
+  {
+    return [];
+  }
 
-    private function registerBindings()
-    {
-        $this->app->bind(
-            'Modules\Ilocations\Repositories\CountryRepository',
-            function () {
-                $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentCountryRepository(new \Modules\Ilocations\Entities\Country());
+  private function registerBindings()
+  {
+    $this->app->bind(
+      'Modules\Ilocations\Repositories\CountryRepository',
+      function () {
+        $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentCountryRepository(new \Modules\Ilocations\Entities\Country());
 
-                if (! config('app.cache')) {
-                    return $repository;
-                }
+        if (!config('app.cache')) {
+          return $repository;
+        }
 
-                return new \Modules\Ilocations\Repositories\Cache\CacheCountryDecorator($repository);
-            }
-        );
-        $this->app->bind(
-            'Modules\Ilocations\Repositories\ProvinceRepository',
-            function () {
-                $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentProvinceRepository(new \Modules\Ilocations\Entities\Province());
+        return new \Modules\Ilocations\Repositories\Cache\CacheCountryDecorator($repository);
+      }
+    );
+    $this->app->bind(
+      'Modules\Ilocations\Repositories\ProvinceRepository',
+      function () {
+        $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentProvinceRepository(new \Modules\Ilocations\Entities\Province());
 
-                if (! config('app.cache')) {
-                    return $repository;
-                }
+        if (!config('app.cache')) {
+          return $repository;
+        }
 
-                return new \Modules\Ilocations\Repositories\Cache\CacheProvinceDecorator($repository);
-            }
-        );
-        $this->app->bind(
-            'Modules\Ilocations\Repositories\GeozonesRepository',
-            function () {
-                $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentGeozonesRepository(new \Modules\Ilocations\Entities\Geozones());
+        return new \Modules\Ilocations\Repositories\Cache\CacheProvinceDecorator($repository);
+      }
+    );
+    $this->app->bind(
+      'Modules\Ilocations\Repositories\GeozonesRepository',
+      function () {
+        $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentGeozonesRepository(new \Modules\Ilocations\Entities\Geozones());
 
-                if (! config('app.cache')) {
-                    return $repository;
-                }
+        if (!config('app.cache')) {
+          return $repository;
+        }
 
-                return new \Modules\Ilocations\Repositories\Cache\CacheGeozonesDecorator($repository);
-            }
-        );
-        $this->app->bind(
-            'Modules\Ilocations\Repositories\CityRepository',
-            function () {
-                $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentCityRepository(new \Modules\Ilocations\Entities\City());
+        return new \Modules\Ilocations\Repositories\Cache\CacheGeozonesDecorator($repository);
+      }
+    );
+    $this->app->bind(
+      'Modules\Ilocations\Repositories\CityRepository',
+      function () {
+        $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentCityRepository(new \Modules\Ilocations\Entities\City());
 
-                if (! config('app.cache')) {
-                    return $repository;
-                }
+        if (!config('app.cache')) {
+          return $repository;
+        }
 
-                return new \Modules\Ilocations\Repositories\Cache\CacheCityDecorator($repository);
-            }
-        );
+        return new \Modules\Ilocations\Repositories\Cache\CacheCityDecorator($repository);
+      }
+    );
 
-        $this->app->bind(
-            'Modules\Ilocations\Repositories\PolygonRepository',
-            function () {
-                $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentPolygonRepository(new \Modules\Ilocations\Entities\Polygon());
+    $this->app->bind(
+      'Modules\Ilocations\Repositories\PolygonRepository',
+      function () {
+        $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentPolygonRepository(new \Modules\Ilocations\Entities\Polygon());
 
-                if (! config('app.cache')) {
-                    return $repository;
-                }
+        if (!config('app.cache')) {
+          return $repository;
+        }
 
-                return new \Modules\Ilocations\Repositories\Cache\CachePolygonDecorator($repository);
-            }
-        );
-        $this->app->bind(
-            'Modules\Ilocations\Repositories\NeighborhoodRepository',
-            function () {
-                $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentNeighborhoodRepository(new \Modules\Ilocations\Entities\Neighborhood());
+        return new \Modules\Ilocations\Repositories\Cache\CachePolygonDecorator($repository);
+      }
+    );
+    $this->app->bind(
+      'Modules\Ilocations\Repositories\NeighborhoodRepository',
+      function () {
+        $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentNeighborhoodRepository(new \Modules\Ilocations\Entities\Neighborhood());
 
-                if (! config('app.cache')) {
-                    return $repository;
-                }
+        if (!config('app.cache')) {
+          return $repository;
+        }
 
-                return new \Modules\Ilocations\Repositories\Cache\CacheNeighborhoodDecorator($repository);
-            }
-        );
-        $this->app->bind(
-            'Modules\Ilocations\Repositories\LocalityRepository',
-            function () {
-                $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentLocalityRepository(new \Modules\Ilocations\Entities\Locality());
+        return new \Modules\Ilocations\Repositories\Cache\CacheNeighborhoodDecorator($repository);
+      }
+    );
+    $this->app->bind(
+      'Modules\Ilocations\Repositories\LocalityRepository',
+      function () {
+        $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentLocalityRepository(new \Modules\Ilocations\Entities\Locality());
 
-                if (! config('app.cache')) {
-                    return $repository;
-                }
+        if (!config('app.cache')) {
+          return $repository;
+        }
 
-                return new \Modules\Ilocations\Repositories\Cache\CacheLocalityDecorator($repository);
-            }
-        );
-        // add bindings
-    }
+        return new \Modules\Ilocations\Repositories\Cache\CacheLocalityDecorator($repository);
+      }
+    );
+    $this->app->bind(
+      'Modules\Ilocations\Repositories\LocatableRepository',
+      function () {
+        $repository = new \Modules\Ilocations\Repositories\Eloquent\EloquentLocatableRepository(new \Modules\Ilocations\Entities\Locatable());
+
+        if (!config('app.cache')) {
+          return $repository;
+        }
+
+        return new \Modules\Ilocations\Repositories\Cache\CacheLocatableDecorator($repository);
+      }
+    );
+    // add bindings
+  }
 }

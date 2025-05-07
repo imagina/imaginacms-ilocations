@@ -32,7 +32,8 @@ trait IsLocatable
     $provinceId = $params['data']['locatable']['province_id'] ?? null;
 
     if ($cityId || $countryId || $provinceId) {
-      \Modules\Ilocations\Entities\Locatable::updateOrCreate([
+      $locatableRepository = app('Modules\Ilocations\Repositories\LocatableRepository');
+      $locatableRepository->updateOrCreate([
         'entity_type' => get_class($this),
         'entity_id' => $this->id,
       ], [
