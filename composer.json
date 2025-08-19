@@ -1,28 +1,30 @@
 {
-    "name": "imagina/ilocations",
-    "description": "",
-    "authors": [
-        {
-            "name": "Imagina Colombia",
-            "email": "soporte@imaginacolombia.com"
-        }
-    ],
-    "extra": {
-        "laravel": {
-            "providers": [],
-            "aliases": {}
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "Modules\\Ilocations\\": "app/",
-            "Modules\\Ilocations\\Database\\Factories\\": "database/factories/",
-            "Modules\\Ilocations\\Database\\Seeders\\": "database/Seeders/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Modules\\Ilocations\\Tests\\": "tests/"
-        }
+  "name": "imagina/ilocations",
+  "description": "",
+  "type": "laravel-module",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Imagina Colombia",
+      "email": "soporte@imaginacolombia.com"
     }
+  ],
+  "extra": {
+    "laravel": {
+      "providers": [],
+      "aliases": {}
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Modules\\Ilocations\\": "app/",
+      "Modules\\Ilocations\\Database\\Factories\\": "database/factories/",
+      "Modules\\Ilocations\\Database\\Seeders\\": "database/Seeders/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Modules\\Ilocations\\Tests\\": "tests/"
+    }
+  }
 }
